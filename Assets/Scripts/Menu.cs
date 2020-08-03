@@ -14,7 +14,11 @@ public class Menu
     [SerializeField]
     GameObject buttons_panel;
     [SerializeField]
-    List<UnityEngine.UI.Button> buttons = new List<UnityEngine.UI.Button>();
+    // List<UnityEngine.UI.Button> buttons = new List<UnityEngine.UI.Button>();
+    
+    [System.Serializable] 
+    public class DictionaryOfButtons : SerializableDictionary<string, UnityEngine.UI.Button> {}
+    public DictionaryOfButtons buttons = new DictionaryOfButtons();
 
     public void AddButton(string action)
     {
@@ -27,7 +31,14 @@ public class Menu
         UnityAction<string> actionButton = new UnityAction<string>(ui.ActionButton);
         UnityEditor.Events.UnityEventTools.AddStringPersistentListener(bc.onClick, actionButton, action);
 
-        buttons.Add(bc);
+        buttons.Add(action, bc);
+        PlaceButtons();
+    }
+
+    public void RemoveButton(string action)
+    {
+        Object.DestroyImmediate(buttons[action].gameObject);
+        buttons.Remove(action);
         PlaceButtons();
     }
 
@@ -44,10 +55,10 @@ public class Menu
 
         foreach (var btn in buttons)
         {
-            if (!btn) {
-                return;
+            if (!btn.Value) {
+                continue;
             }
-            btn.transform.localPosition = new Vector3(x * x_step, y, 0);
+            btn.Value.transform.localPosition = new Vector3(x * x_step, y, 0);
             x *= -1;
             if (q++ % 2 == 1)
             {

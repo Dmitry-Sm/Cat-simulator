@@ -64,6 +64,7 @@ public class Actions : MonoBehaviour
         {
             effect_by_action_and_mood.Remove(GetKey(action, mood));
         }
+        menu.RemoveButton(action);
     }
 
     public void AddMood(string mood)
@@ -88,9 +89,9 @@ public class Actions : MonoBehaviour
 
     public void Test()
     {
-        foreach (var mood in moods)
+        foreach (var action in actions)
         {
-            moodIcons.Add(mood, null);
+            menu.AddButton(action);
         }
     }
 }
